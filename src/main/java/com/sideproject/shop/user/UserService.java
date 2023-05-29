@@ -15,4 +15,20 @@ public class UserService {
     public User getUser(Map<String, Object> parameters) {
         return mapper.login(parameters);
     }
+
+    public int checkid(Map<String, Object> parameters) {
+        return mapper.checkid(parameters);
+    }
+
+    public int insert_user(Map<String, Object> parameters) {
+        return mapper.insert_user(parameters);
+    }
+
+    public int insert_userId(Map<String, Object> parameters) {
+        return mapper.insert_userId(parameters);
+    }
+
+    public int insert_userInfo(Map<String, Object> parameters) {
+        return mapper.insert_userInfo(parameters);
+    }
 }

@@ -14,6 +14,7 @@ public class User {
     private int isAdmin;
     private LocalDateTime joinDate;
     private String loginId;
+    private String password;
     private String name;
     private String email;
     private String phone;
