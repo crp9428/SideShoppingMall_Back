@@ -16,4 +16,56 @@
         ON     INFO.ID = U.ID
         WHERE  1 = 1
     </select>
+
+    <select id="checkid" parameterType="hashmap" resultType="int">
+        SELECT COUNT(*)
+        FROM   USER_ID
+        WHERE  1 = 1
+        AND    LOGIN_ID = #{P_LOGIN_ID}
+    </select>
+
+    <insert id="insert_user" parameterType="hashmap">
+        INSERT INTO USER (
+            ID
+        ) VALUES (
+            #{P_ID}
+        )
+    </insert>
+
+    <insert id="insert_userId" parameterType="hashmap">
+        INSERT INTO USER_ID (
+            ID
+            , LOGIN_ID
+            , PASSWORD
+        ) VALUES (
+            #{P_ID}
+            , #{P_LOGIN_ID}
+            , #{P_PASSWORD}
+        )
+    </insert>
+
+    <insert id="insert_userInfo" parameterType="hashmap">
+        INSERT INTO USER_INFO (
+            ID
+            , NAME
+            , EMAIL
+            , PHONE
+            , BIRTH
+            , GENDER
+            , ADDRESS1
+            , ADDRESS2
+            , ADDRESS3
+        ) VALUES (
+            #{P_ID}
+            , #{P_NAME, jdbcType=VARCHAR}
+            , #{P_EMAIL, jdbcType=VARCHAR}
+            , #{P_PHONE, jdbcType=VARCHAR}
+            , #{P_BIRTH, jdbcType=VARCHAR}
+            , #{P_GENDER, jdbcType=VARCHAR}
+            , #{P_ADDRESS1, jdbcType=VARCHAR}
+            , #{P_ADDRESS2, jdbcType=VARCHAR}
+            , #{P_ADDRESS3, jdbcType=VARCHAR}
+        )
+    </insert>
+
 </mapper>

@@ -5,13 +5,14 @@ plugins {
 }
 
 group = 'com.sideproject'
-version = '0.0.1'
+version = '1.0'
 sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	jar.archiveName = 'sideprojectshop.jar'
 }
 
 repositories {
