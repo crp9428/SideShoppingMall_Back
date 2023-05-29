@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sideproject.shop.mappers.UserMapper">
+
+    <select id="login" parameterType="hashmap" resultType="com.sideproject.shop.user.User">
+        SELECT U.ID
+               , U.IS_ADMIN
+               , UID.LOGIN_ID
+               , INFO.NAME
+        FROM   USER U
+        INNER JOIN USER_ID UID
+        ON     UID.LOGIN_ID = #{P_LOGIN_ID}
+        AND    UID.PASSWORD = #{P_PASSWORD}
+        AND    U.ID = UID.ID
+        INNER JOIN USER_INFO INFO
+        ON     INFO.ID = U.ID
+        WHERE  1 = 1
+    </select>
+</mapper>

@@ -1,0 +1,10 @@
+server:
+    address: 0.0.0.0
+    port: 8080
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+        username: shopadmin
+        password: 940208
