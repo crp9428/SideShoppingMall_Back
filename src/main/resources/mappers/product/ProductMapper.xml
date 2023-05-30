@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sideproject.shop.mappers.ProductMapper">
+
+    <select id="productList" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
+        SELECT PRODUCT.ID
+            , NAME
+            , PRICE
+            , CATEGORY_CODE
+            , CATEGORIES.CODE_NAME AS CATEGORY_NAME
+            , HIT
+            , STOCKS
+            , IMAGE AS THUMBNAIL
+            , INSERT_DATE
+        FROM   PRODUCT
+        LEFT JOIN COMMON_CODE CATEGORIES
+        ON     CATEGORIES.CODE_GROUP1 = 'CATEGORY'
+        AND    CATEGORIES.CODE_GROUP2 = 'CATEGORY'
+        AND    CATEGORIES.CODE = CATEGORY_CODE
+        LEFT JOIN PRODUCT_IMAGE IMAGE
+        ON     IMAGE.ID = PRODUCT.ID
+        AND    IMAGE.SEQ = 1
+        WHERE  1 = 1
+        AND    CATEGORY_CODE = #{P_CATEGORY}
+        ORDER BY
+        <choose>
+            <when test="P_ORDER == 1" >HIT DESC</when>
+            <when test="P_ORDER == 2" >PRICE ASC</when>
+            <when test="P_ORDER == 3" >PRICE DESC</when>
+            <when test="P_ORDER == 4" >INSERT_DATE DESC</when>
+            <otherwise>PRODUCT.ID ASC</otherwise>
+        </choose>
+    </select>
+
+    <!-- <select id="getProduct" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
+    
+    </select>
+
+    <select id="productImageList" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
+    
+    </select>
+
+
+    <select id="getProductImage" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
+    
+    </select>
+
+    <insert id="insert_product" parameterType="hashmap" >
+
+    </insert>
+
+    <insert id="insert_product_image" parameterType="hashmap" >
+
+    </insert>-->
+</mapper>
