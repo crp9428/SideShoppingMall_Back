@@ -16,10 +16,11 @@ public class Product {
     private int price;
     private String categoryCode;
     private String categoryName;
+    private List<String> sizes;
     private String sizeInfo;
     private String content;
     private int hit;
-    private int stocks;
+    private int stock;
     private String thumbnail;
     private List<String> images;
     private LocalDateTime insertDate;
