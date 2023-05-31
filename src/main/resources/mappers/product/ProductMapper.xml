@@ -9,7 +9,7 @@
             , CATEGORY_CODE
             , CATEGORIES.CODE_NAME AS CATEGORY_NAME
             , HIT
-            , STOCKS
+            , STOCK
             , IMAGE AS THUMBNAIL
             , INSERT_DATE
         FROM   PRODUCT
@@ -48,7 +48,7 @@
                , SIZEINFO
                , CONTENT
                , HIT
-               , STOCKS
+               , STOCK
                , INSERT_DATE
         FROM   PRODUCT
         LEFT JOIN COMMON_CODE CATEGORIES
@@ -65,6 +65,16 @@
         ORDER BY SEQ ASC
     </select>
 
+    <select id="productSizeList" parameterType="hashmap" resultType="String">
+        SELECT COMMON.CODE_NAME
+        FROM   PRODUCT_SIZE SIZES
+        INNER JOIN COMMON_CODE COMMON
+        ON     COMMON.CODE_GROUP1 = 'SIZE'
+        AND    COMMON.CODE_GROUP2 = SIZES.CATEGORY_CODE
+        AND    COMMON.CODE = SIZES.SIZE_CODE
+        WHERE  SIZES.ID = #{P_PRODUCT_ID}
+    </select>
+
     <insert id="insertProduct" parameterType="hashmap" >
         <selectKey resultType="int" keyProperty="ID" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -76,12 +86,14 @@
             , CATEGORY_CODE
             , SIZEINFO
             , CONTENT
+            , STOCK
         ) VALUES (
             #{P_NAME}
             , #{P_PRICE}
             , #{P_CATEGORY_CODE}
             , #{P_SIZEINFO, jdbcType=VARCHAR}
             , #{P_CONTENT, jdbcType=VARCHAR}
+            , #{P_STOCK}
         )
     </insert>
 
@@ -94,6 +106,18 @@
             #{P_ID}
             , #{P_SEQ}
             , #{P_IMAGE}
+        )
+    </insert>
+
+    <insert id="insertProductSize" parameterType="hashmap" >
+        INSERT INTO PRODUCT_SIZE (
+            ID
+            , CATEGORY_CODE
+            , SIZE_CODE
+        ) VALUES (
+            #{P_ID}
+            , #{P_CATEGORY_CODE}
+            , #{P_SIZE}
         )
     </insert>
 </mapper>
