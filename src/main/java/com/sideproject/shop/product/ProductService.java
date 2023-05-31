@@ -18,16 +18,16 @@ public class ProductService {
         return mapper.productList(parameters);
     }
 
+    public void updateProductHit(Map<String, Object> parameters) {
+        mapper.updateProductHit(parameters);
+    }
+
     public Product getProduct(Map<String, Object> parameters) {
         return mapper.getProduct(parameters);
     }
 
-    public List<ProductImage> productImageList(Map<String, Object> parameters) {
+    public List<String> productImageList(Map<String, Object> parameters) {
         return mapper.productImageList(parameters);
-    }
-
-    public ProductImage getProductImage(Map<String, Object> parameters) {
-        return mapper.getProductImage(parameters);
     }
 
     public int insert_product(Map<String, Object> parameters) {

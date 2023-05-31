@@ -21,6 +21,6 @@ public class Product {
     private int hit;
     private int stocks;
     private String thumbnail;
-    private List<ProductImage> images;
+    private List<String> images;
     private LocalDateTime insertDate;
 }

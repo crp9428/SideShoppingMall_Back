@@ -30,21 +30,42 @@
             <when test="P_ORDER == 4" >INSERT_DATE DESC</when>
             <otherwise>PRODUCT.ID ASC</otherwise>
         </choose>
+        LIMIT #{P_START}, #{P_VIEW_NUM}
     </select>
 
-    <!-- <select id="getProduct" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
-    
+    <update id="updateProductHit" parameterType="hashmap" >
+        UPDATE PRODUCT
+        SET    HIT = HIT + 1
+        WHERE  ID = #{P_PRODUCT_ID}
+    </update>
+
+    <select id="getProduct" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
+        SELECT ID
+               , NAME
+               , PRICE
+               , CATEGORY_CODE
+               , CATEGORIES.CODE_NAME AS CATEGORY_NAME
+               , SIZEINFO
+               , CONTENT
+               , HIT
+               , STOCKS
+               , INSERT_DATE
+        FROM   PRODUCT
+        LEFT JOIN COMMON_CODE CATEGORIES
+        ON     CATEGORIES.CODE_GROUP1 = 'CATEGORY'
+        AND    CATEGORIES.CODE_GROUP2 = 'CATEGORY'
+        AND    CATEGORIES.CODE = CATEGORY_CODE
+        WHERE  ID = #{P_PRODUCT_ID}
     </select>
 
-    <select id="productImageList" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
-    
+    <select id="productImageList" parameterType="hashmap" resultType="String">
+        SELECT IMAGE
+        FROM   PRODUCT_IMAGE
+        WHERE  ID = #{P_PRODUCT_ID}
+        ORDER BY SEQ ASC
     </select>
 
-
-    <select id="getProductImage" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
-    
-    </select>
-
+    <!-- 
     <insert id="insert_product" parameterType="hashmap" >
 
     </insert>
