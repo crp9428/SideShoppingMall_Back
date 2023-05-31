@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,7 @@ public class ProductController {
         try {
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("P_CATEGORY", category);
-            parameters.put("P_PAGE", page);
+            parameters.put("P_START", (page - 1) * 8);
             parameters.put("P_VIEW_NUM", 8);
             parameters.put("P_ORDER", order);
 
@@ -33,5 +34,25 @@ public class ProductController {
         }
 
         return list;
+    }
+
+    @Transactional
+    @GetMapping("/getProduct")
+    public Product getProduct(@RequestParam int id) throws Exception {
+        Product product = new Product();
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_PRODUCT_ID", id);
+
+            service.updateProductHit(parameters);
+
+            product = service.getProduct(parameters);
+
+            product.setImages(service.productImageList(parameters));
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return product;
     }
 }
