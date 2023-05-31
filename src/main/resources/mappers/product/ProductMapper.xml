@@ -65,12 +65,35 @@
         ORDER BY SEQ ASC
     </select>
 
-    <!-- 
-    <insert id="insert_product" parameterType="hashmap" >
+    <insert id="insertProduct" parameterType="hashmap" >
+        <selectKey resultType="int" keyProperty="ID" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
 
+        INSERT INTO PRODUCT (
+            NAME
+            , PRICE
+            , CATEGORY_CODE
+            , SIZEINFO
+            , CONTENT
+        ) VALUES (
+            #{P_NAME}
+            , #{P_PRICE}
+            , #{P_CATEGORY_CODE}
+            , #{P_SIZEINFO, jdbcType=VARCHAR}
+            , #{P_CONTENT, jdbcType=VARCHAR}
+        )
     </insert>
 
-    <insert id="insert_product_image" parameterType="hashmap" >
-
-    </insert>-->
+    <insert id="insertProductImage" parameterType="hashmap" >
+        INSERT INTO PRODUCT_IMAGE (
+            ID
+            , SEQ
+            , IMAGE
+        ) VALUES (
+            #{P_ID}
+            , #{P_SEQ}
+            , #{P_IMAGE}
+        )
+    </insert>
 </mapper>

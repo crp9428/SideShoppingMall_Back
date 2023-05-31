@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,5 +55,41 @@ public class ProductController {
         }
 
         return product;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/addProduct")
+    public Map<String, Object> addProduct(@RequestBody Product product) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_NAME", product.getName());
+            parameters.put("P_PRICE", product.getPrice());
+            parameters.put("P_CATEGORY_CODE", product.getCategoryCode());
+            parameters.put("P_SIZEINFO", product.getSizeInfo());
+            parameters.put("P_CONTENT", product.getContent());
+
+            service.insertProduct(parameters);
+
+            parameters.put("P_ID", parameters.get("ID"));
+            parameters.put("P_SEQ", 1);
+            for(String image : product.getImages()) {
+                parameters.put("P_IMAGE", image);
+
+                service.insertProductImage(parameters);
+                parameters.replace("P_SEQ", Integer.parseInt(parameters.get("P_SEQ").toString()) + 1);
+            }
+
+        }  catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+
+            throw e;
+        }
+
+        return result;
     }
 }
