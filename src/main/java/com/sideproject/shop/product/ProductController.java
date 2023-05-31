@@ -50,6 +50,7 @@ public class ProductController {
             product = service.getProduct(parameters);
 
             product.setImages(service.productImageList(parameters));
+            product.setSizes(service.productSizeList(parameters));
         } catch (Exception e) {
             throw e;
         }
@@ -71,6 +72,7 @@ public class ProductController {
             parameters.put("P_CATEGORY_CODE", product.getCategoryCode());
             parameters.put("P_SIZEINFO", product.getSizeInfo());
             parameters.put("P_CONTENT", product.getContent());
+            parameters.put("P_STOCK", product.getStock());
 
             service.insertProduct(parameters);
 
@@ -80,7 +82,14 @@ public class ProductController {
                 parameters.put("P_IMAGE", image);
 
                 service.insertProductImage(parameters);
+                
                 parameters.replace("P_SEQ", Integer.parseInt(parameters.get("P_SEQ").toString()) + 1);
+            }
+
+            for(String size : product.getSizes()) {
+                parameters.put("P_SIZE", size);
+
+                service.insertProductSize(parameters);
             }
 
         }  catch (Exception e) {

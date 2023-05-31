@@ -30,11 +30,19 @@ public class ProductService {
         return mapper.productImageList(parameters);
     }
 
+    public List<String> productSizeList(Map<String, Object> parameters) {
+        return mapper.productSizeList(parameters);
+    }
+
     public int insertProduct(Map<String, Object> parameters) {
         return mapper.insertProduct(parameters);
     }
 
     public int insertProductImage(Map<String, Object> parameters) {
         return mapper.insertProductImage(parameters);
+    }
+
+    public int insertProductSize(Map<String, Object> parameters) {
+        return mapper.insertProductSize(parameters);
     }
 }
