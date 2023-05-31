@@ -17,7 +17,7 @@ public interface ProductMapper {
 
     List<String> productImageList(Map<String, Object> parameters);
 
-    int insert_product(Map<String, Object> parameters);
+    int insertProduct(Map<String, Object> parameters);
 
-    int insert_product_image(Map<String, Object> parameters);
+    int insertProductImage(Map<String, Object> parameters);
 }
