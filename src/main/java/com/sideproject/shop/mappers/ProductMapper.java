@@ -9,6 +9,8 @@ import com.sideproject.shop.product.Product;
 
 @Mapper
 public interface ProductMapper {
+    int productCount(Map<String, Object> parameters);
+    
     List<Product> productList(Map<String, Object> parameters);
 
     void updateProductHit(Map<String, Object> parameters);
