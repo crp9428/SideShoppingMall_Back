@@ -14,6 +14,10 @@ public class ProductService {
     @Autowired
     ProductMapper mapper;
 
+    public int productCount(Map<String, Object> parameters) {
+        return mapper.productCount(parameters);
+    }
+
     public List<Product> productList(Map<String, Object> parameters) {
         return mapper.productList(parameters);
     }

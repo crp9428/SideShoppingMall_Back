@@ -20,8 +20,8 @@ public class ProductController {
     ProductService service;
 
     @GetMapping("/productList")
-    public List<Product> getProductList(@RequestParam String category, @RequestParam int page, @RequestParam String order) throws Exception {
-        List<Product> list = new ArrayList<Product>();
+    public Map<String, Object> getProductList(@RequestParam String category, @RequestParam int page, @RequestParam String order) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("P_CATEGORY", category);
@@ -29,12 +29,17 @@ public class ProductController {
             parameters.put("P_VIEW_NUM", 8);
             parameters.put("P_ORDER", order);
 
-            list = service.productList(parameters);
+            List<Product> list = service.productList(parameters);
+            int count = service.productCount(parameters);
+            
+            result.put("items", list);
+            result.put("counts", count);
+
         } catch (Exception e) {
             throw e;
         }
 
-        return list;
+        return result;
     }
 
     @Transactional
