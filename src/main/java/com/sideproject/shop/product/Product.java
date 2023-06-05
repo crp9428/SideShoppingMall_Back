@@ -23,5 +23,6 @@ public class Product {
     private int stock;
     private String thumbnail;
     private List<ProductImage> images;
+    private int isDelete;
     private Timestamp insertDate;
 }

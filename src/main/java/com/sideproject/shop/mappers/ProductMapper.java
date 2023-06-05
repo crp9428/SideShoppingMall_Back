@@ -29,4 +29,10 @@ public interface ProductMapper {
     int insertProductSize(Map<String, Object> parameters);
 
     int updateProduct(Map<String, Object> parameters);
+
+    int deleteProductImage(Map<String, Object> parameters);
+
+    int deleteProductSize(Map<String, Object> parameters);
+
+    int deleteProduct(Map<String, Object> parameters);
 }

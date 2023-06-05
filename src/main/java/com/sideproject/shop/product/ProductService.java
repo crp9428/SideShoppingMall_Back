@@ -53,4 +53,16 @@ public class ProductService {
     public int updateProduct(Map<String, Object> parameters) {
         return mapper.updateProduct(parameters);
     }
+
+    public int deleteProductImage(Map<String, Object> parameters) {
+        return mapper.deleteProductImage(parameters);
+    }
+
+    public int deleteProductSize(Map<String, Object> parameters) {
+        return mapper.deleteProductSize(parameters);
+    }
+
+    public int deleteProduct(Map<String, Object> parameters) {
+        return mapper.deleteProduct(parameters);
+    }
 }

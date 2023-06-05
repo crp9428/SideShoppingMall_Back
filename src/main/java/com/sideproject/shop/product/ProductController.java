@@ -1,6 +1,8 @@
 package com.sideproject.shop.product;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,6 +56,8 @@ public class ProductController {
             product = service.getProduct(parameters);
 
             product.setImages(service.productImageList(parameters));
+
+            parameters.put("P_GET_NAME", true);
             product.setSizes(service.productSizeList(parameters));
         } catch (Exception e) {
             throw e;
@@ -81,13 +85,10 @@ public class ProductController {
             service.insertProduct(parameters);
 
             parameters.put("P_ID", parameters.get("ID"));
-            parameters.put("P_SEQ", 1);
             for(ProductImage image : product.getImages()) {
                 parameters.put("P_IMAGE", image.getImage());
 
                 service.insertProductImage(parameters);
-                
-                parameters.replace("P_SEQ", Integer.parseInt(parameters.get("P_SEQ").toString()) + 1);
             }
 
             for(String size : product.getSizes()) {
@@ -124,11 +125,70 @@ public class ProductController {
 
             service.updateProduct(parameters);
 
-            
+            List<ProductImage> images = (product.getImages() == null || product.getImages().size() == 0) ? new ArrayList<ProductImage>() : product.getImages();
+            for(ProductImage image : images) {
+                if(image.getImage() == null) {
+                    parameters.put("P_IMAGE", null);
+                    parameters.put("P_SEQ", image.getSeq());
 
+                    service.deleteProductImage(parameters);
+                } else {
+                    parameters.put("P_IMAGE", image.getImage());
+                    parameters.put("P_SEQ", null);
 
-            // [{SEQ: null, IMAGE: ""}]
+                    service.insertProductImage(parameters);
+                }
+            }
 
+            parameters.put("P_PRODUCT_ID", product.getId());
+            parameters.put("P_CATEGORY_CODE", product.getCategoryCode());
+            parameters.put("P_GET_NAME", false);
+
+            Collection<String> inputList = product.getSizes();
+            Collection<String> dbList = service.productSizeList(parameters);
+
+            List<String> addSizeList = new ArrayList<String>(inputList);
+            List<String> deleteSizeList = new ArrayList<String>(dbList);
+
+            addSizeList.removeAll(dbList);
+            deleteSizeList.removeAll(inputList);
+
+            for(String size : addSizeList) {
+                parameters.put("P_SIZE", size);
+
+                service.insertProductSize(parameters);
+            }
+
+            for(String size : deleteSizeList) {
+                parameters.put("P_SIZE", size);
+
+                service.deleteProductSize(parameters);
+            }
+        }  catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+
+            throw e;
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/deleteProduct")
+    public Map<String, Object> deleteProduct(@RequestParam String id) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", id);
+
+            // service.deleteProductSize(parameters);
+            // service.deleteProductImage(parameters);
+
+            service.deleteProduct(parameters);
         }  catch (Exception e) {
             result.put("result", false);
             result.put("message", e.getMessage());
