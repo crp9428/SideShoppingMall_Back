@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sideproject.shop.mappers.CommonMapper">
+    
+    <select id="getCommonCode" parameterType="hashmap" resultType="hashmap">
+        SELECT CODE_GROUP1
+               , CODE_GROUP2
+               , CODE
+               , CODE_NAME
+               , GROUP_DESC
+               , CODE_DESC
+        FROM   COMMON_CODE
+        WHERE  1 = 1
+        <if test="P_GROUP_1 != null and !P_GROUP_1.isEmpty()" >
+        AND    CODE_GROUP1 = #{P_GROUP_1}
+        </if>
+        <if test="P_GROUP_2 != null and !P_GROUP_2.isEmpty()" >
+        AND    CODE_GROUP2 = #{P_GROUP_2}
+        </if>
+        ORDER BY CODE_GROUP1 ASC, CODE_GROUP2 ASC, CODE ASC
+    </select>
+
+</mapper>
