@@ -13,11 +13,7 @@ public class UserService {
     private UserMapper mapper;
 
     public User getUser(Map<String, Object> parameters) {
-        return mapper.login(parameters);
-    }
-
-    public int checkid(Map<String, Object> parameters) {
-        return mapper.checkid(parameters);
+        return mapper.getUser(parameters);
     }
 
     public int insert_user(Map<String, Object> parameters) {
@@ -30,5 +26,9 @@ public class UserService {
 
     public int insert_userInfo(Map<String, Object> parameters) {
         return mapper.insert_userInfo(parameters);
+    }
+
+    public int withdraw(Map<String, Object> parameters) {
+        return mapper.withdraw(parameters);
     }
 }
