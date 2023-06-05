@@ -6,11 +6,17 @@ spring:
     datasource:
         driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
         # 로컬
-        jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+        jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true&serverTimeZone=UTC
         # 외부
-        # jdbc-url: jdbc:log4jdbc:mysql://119.193.0.189:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+        # jdbc-url: jdbc:log4jdbc:mysql://119.193.0.189:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true&serverTimeZone=UTC
         username: shopadmin
         password: 940208
+        hikari:
+            connection-timeout: 10000
+            validation-timeout: 8000
+            maximum-pool-size: 10
+            max-lifetime: 10000
+            leakDetectionThreshold: 2000
 
 # 로그 설정
 logging:
@@ -18,7 +24,11 @@ logging:
         jdbc:
             sqlonly: info
             sqltiming: off
-            resultsettable: info
+            resultsettable: off
             audit: off
             resultset: off
             connection: off
+        com:
+            zaxxer:
+                hikari: TRACE
+                hikari.HikariConfig: DEBUG
