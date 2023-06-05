@@ -1,6 +1,6 @@
 package com.sideproject.shop.product;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.Getter;
@@ -23,5 +23,5 @@ public class Product {
     private int stock;
     private String thumbnail;
     private List<String> images;
-    private LocalDateTime insertDate;
+    private Timestamp insertDate;
 }
