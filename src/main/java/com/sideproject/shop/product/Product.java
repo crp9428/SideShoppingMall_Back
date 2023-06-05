@@ -22,6 +22,6 @@ public class Product {
     private int hit;
     private int stock;
     private String thumbnail;
-    private List<String> images;
+    private List<ProductImage> images;
     private Timestamp insertDate;
 }

@@ -1,6 +1,5 @@
 package com.sideproject.shop.product;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -83,8 +82,8 @@ public class ProductController {
 
             parameters.put("P_ID", parameters.get("ID"));
             parameters.put("P_SEQ", 1);
-            for(String image : product.getImages()) {
-                parameters.put("P_IMAGE", image);
+            for(ProductImage image : product.getImages()) {
+                parameters.put("P_IMAGE", image.getImage());
 
                 service.insertProductImage(parameters);
                 
@@ -96,6 +95,39 @@ public class ProductController {
 
                 service.insertProductSize(parameters);
             }
+
+        }  catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+
+            throw e;
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/updateProduct")
+    public Map<String, Object> updateProduct(@RequestBody Product product) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", product.getId());
+            parameters.put("P_NAME", product.getName());
+            parameters.put("P_PRICE", product.getPrice());
+            parameters.put("P_SIZEINFO", product.getSizeInfo());
+            parameters.put("P_CONTENT", product.getContent());
+            parameters.put("P_STOCK", product.getStock());
+
+            service.updateProduct(parameters);
+
+            
+
+
+            // [{SEQ: null, IMAGE: ""}]
 
         }  catch (Exception e) {
             result.put("result", false);

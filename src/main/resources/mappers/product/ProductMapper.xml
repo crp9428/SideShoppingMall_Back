@@ -16,16 +16,16 @@
             , CATEGORIES.CODE_NAME AS CATEGORY_NAME
             , HIT
             , STOCK
-            , IMAGE AS THUMBNAIL
+            , IMAGES.IMAGE AS THUMBNAIL
             , INSERT_DATE
         FROM   PRODUCT
         LEFT JOIN COMMON_CODE CATEGORIES
         ON     CATEGORIES.CODE_GROUP1 = 'CATEGORY'
         AND    CATEGORIES.CODE_GROUP2 = 'CATEGORY'
         AND    CATEGORIES.CODE = CATEGORY_CODE
-        LEFT JOIN PRODUCT_IMAGE IMAGE
-        ON     IMAGE.ID = PRODUCT.ID
-        AND    IMAGE.SEQ = 1
+        LEFT JOIN PRODUCT_IMAGE IMAGES
+        ON     IMAGES.ID = PRODUCT.ID
+        AND    IMAGES.SEQ = 1
         WHERE  1 = 1
         AND    CATEGORY_CODE = #{P_CATEGORY}
         ORDER BY
@@ -64,8 +64,10 @@
         WHERE  ID = #{P_PRODUCT_ID}
     </select>
 
-    <select id="productImageList" parameterType="hashmap" resultType="String">
-        SELECT IMAGE
+    <select id="productImageList" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
+        SELECT ID
+               , SEQ
+               , IMAGE
         FROM   PRODUCT_IMAGE
         WHERE  ID = #{P_PRODUCT_ID}
         ORDER BY SEQ ASC
@@ -126,4 +128,14 @@
             , #{P_SIZE}
         )
     </insert>
+
+    <update id="updateProduct" parameterType="hashmap" >
+        UPDATE PRODUCT
+        SET    NAME = IFNULL(#{P_NAME}, NAME)
+               , PRICE = IFNULL(#{P_PRICE}, NAME)
+               , SIZEINFO = IFNULL(#{P_SIZEINFO, jdbcType=VARCHAR}, NAME)
+               , CONTENT = IFNULL(#{P_CONTENT, jdbcType=VARCHAR}, NAME)
+               , STOCK = IFNULL(#{P_STOCK}, NAME)
+        WHERE  ID = #{P_ID}
+    </update>
 </mapper>
