@@ -30,7 +30,7 @@ public class ProductService {
         return mapper.getProduct(parameters);
     }
 
-    public List<String> productImageList(Map<String, Object> parameters) {
+    public List<ProductImage> productImageList(Map<String, Object> parameters) {
         return mapper.productImageList(parameters);
     }
 
@@ -48,5 +48,21 @@ public class ProductService {
 
     public int insertProductSize(Map<String, Object> parameters) {
         return mapper.insertProductSize(parameters);
+    }
+
+    public int updateProduct(Map<String, Object> parameters) {
+        return mapper.updateProduct(parameters);
+    }
+
+    public int deleteProductImage(Map<String, Object> parameters) {
+        return mapper.deleteProductImage(parameters);
+    }
+
+    public int deleteProductSize(Map<String, Object> parameters) {
+        return mapper.deleteProductSize(parameters);
+    }
+
+    public int deleteProduct(Map<String, Object> parameters) {
+        return mapper.deleteProduct(parameters);
     }
 }

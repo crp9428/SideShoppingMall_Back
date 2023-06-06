@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,14 +31,24 @@ public class UserController {
             Map<String, Object> parameters = new HashMap<String, Object>();
 
             parameters.put("P_LOGIN_ID", request.getParameter("loginId"));
-            
+
+            User user = service.getUser(parameters);
+            if(user == null || user.getId() == null || user.getId().isEmpty()) {
+                result.put("result", false);
+                result.put("message", "해당되는 회원이 없습니다.");
+
+                return result;
+            } else if(user.getIsWithdraw() == 1) {
+                result.put("result", false);
+                result.put("message", "탈퇴한 회원입니다.");
+
+                return result;
+            }
+
             byte[] getByte = request.getParameter("password").getBytes("UTF-8");
             parameters.put("P_PASSWORD", HexUtils.toHexString(getByte));
 
-            System.out.println(parameters.toString());
-
-            User user = service.getUser(parameters);
-
+            user = service.getUser(parameters);
             if(user == null || user.getId() == null || user.getId().isEmpty()) {
                 result.put("result", false);
                 result.put("message", "해당되는 회원이 없습니다.");
@@ -62,18 +73,17 @@ public class UserController {
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("P_LOGIN_ID", loginId);
 
-            System.out.println(parameters.toString());
-
-            int sqlResult = service.checkid(parameters);
-            System.out.println("sqlResult: " + sqlResult);
-            if(sqlResult == 1) {
-                result.put("result", false);
-                result.put("message", "이미 사용중인 ID 입니다.");
-            } else {
+            User user = service.getUser(parameters);
+            if(user == null || user.getId() == null || user.getId().isEmpty()) {
                 result.put("result", true);
                 result.put("message", "사용 가능한 ID 입니다.");
+            } else if(user.getIsWithdraw() == 1) {
+                result.put("result", false);
+                result.put("message", "사용 불가능한 ID 입니다.");
+            } else if(user.getId() != null && !user.getId().isEmpty()) {
+                result.put("result", false);
+                result.put("message", "이미 사용중인 ID 입니다.");
             }
-
         } catch (Exception e) {
             result.put("result", false);
             result.put("message", e.getMessage());
@@ -84,7 +94,7 @@ public class UserController {
 
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/join_loginId")
-    public Map<String, Object> join (User user) throws Exception {
+    public Map<String, Object> join (@RequestBody User user) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("result", true);
         result.put("message", "success");
@@ -153,5 +163,29 @@ public class UserController {
         }
 
         return result;
-    } 
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/withdraw")
+    public Map<String, Object> withdraw (@RequestParam String id) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", id);
+
+            int sqlResult = service.withdraw(parameters);
+            if(sqlResult != 1) {
+                result.put("result", false);
+                result.put("message", "탈퇴 처리에 실패하였습니다.");
+            }
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
 }

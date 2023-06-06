@@ -6,6 +6,7 @@
         SELECT COUNT(ID)
         FROM   PRODUCT
         WHERE  CATEGORY_CODE = #{P_CATEGORY}
+        AND    IS_DELETE = 0
     </select>
 
     <select id="productList" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
@@ -16,18 +17,19 @@
             , CATEGORIES.CODE_NAME AS CATEGORY_NAME
             , HIT
             , STOCK
-            , IMAGE AS THUMBNAIL
+            , IMAGES.IMAGE AS THUMBNAIL
             , INSERT_DATE
         FROM   PRODUCT
         LEFT JOIN COMMON_CODE CATEGORIES
         ON     CATEGORIES.CODE_GROUP1 = 'CATEGORY'
         AND    CATEGORIES.CODE_GROUP2 = 'CATEGORY'
         AND    CATEGORIES.CODE = CATEGORY_CODE
-        LEFT JOIN PRODUCT_IMAGE IMAGE
-        ON     IMAGE.ID = PRODUCT.ID
-        AND    IMAGE.SEQ = 1
+        LEFT JOIN PRODUCT_IMAGE IMAGES
+        ON     IMAGES.ID = PRODUCT.ID
+        AND    IMAGES.SEQ = 1
         WHERE  1 = 1
         AND    CATEGORY_CODE = #{P_CATEGORY}
+        AND    IS_DELETE = 0
         ORDER BY
         <choose>
             <when test="P_ORDER == 1" >HIT DESC</when>
@@ -55,6 +57,7 @@
                , CONTENT
                , HIT
                , STOCK
+               , IS_DELETE
                , INSERT_DATE
         FROM   PRODUCT
         LEFT JOIN COMMON_CODE CATEGORIES
@@ -64,15 +67,22 @@
         WHERE  ID = #{P_PRODUCT_ID}
     </select>
 
-    <select id="productImageList" parameterType="hashmap" resultType="String">
-        SELECT IMAGE
+    <select id="productImageList" parameterType="hashmap" resultType="com.sideproject.shop.product.ProductImage">
+        SELECT ID
+               , SEQ
+               , IMAGE
         FROM   PRODUCT_IMAGE
         WHERE  ID = #{P_PRODUCT_ID}
         ORDER BY SEQ ASC
     </select>
 
     <select id="productSizeList" parameterType="hashmap" resultType="String">
+        <if test="P_GET_NAME == true">
         SELECT COMMON.CODE_NAME
+        </if>
+        <if test="P_GET_NAME == false">
+        SELECT SIZES.SIZE_CODE
+        </if>
         FROM   PRODUCT_SIZE SIZES
         INNER JOIN COMMON_CODE COMMON
         ON     COMMON.CODE_GROUP1 = 'SIZE'
@@ -108,11 +118,12 @@
             ID
             , SEQ
             , IMAGE
-        ) VALUES (
-            #{P_ID}
-            , #{P_SEQ}
-            , #{P_IMAGE}
         )
+        SELECT #{P_ID} AS ID
+               , IFNULL(MAX(SEQ), 0) + 1 AS SEQ
+               , #{P_IMAGE} AS IMAGE
+        FROM   PRODUCT_IMAGE
+        WHERE  ID = #{P_ID}
     </insert>
 
     <insert id="insertProductSize" parameterType="hashmap" >
@@ -126,4 +137,41 @@
             , #{P_SIZE}
         )
     </insert>
+
+    <update id="updateProduct" parameterType="hashmap" >
+        UPDATE PRODUCT
+        SET    NAME = IFNULL(#{P_NAME}, NAME)
+               , PRICE = IFNULL(#{P_PRICE}, PRICE)
+               , SIZEINFO = IFNULL(#{P_SIZEINFO, jdbcType=VARCHAR}, SIZEINFO)
+               , CONTENT = IFNULL(#{P_CONTENT, jdbcType=VARCHAR}, CONTENT)
+               , STOCK = IFNULL(#{P_STOCK}, STOCK)
+        WHERE  ID = #{P_ID}
+    </update>
+
+    <delete id="deleteProductImage" parameterType="hashmap" >
+        DELETE
+        FROM   PRODUCT_IMAGE
+        WHERE  ID = #{P_ID}
+        <if test="P_SEQ != null and !P_SEQ.isEmpty()" >
+        AND    SEQ = #{P_SEQ}
+        </if>
+    </delete>
+
+    <delete id="deleteProductSize" parameterType="hashmap" >
+        DELETE
+        FROM   PRODUCT_SIZE
+        WHERE  ID = #{P_ID}
+        <if test="P_CATEGORY_CODE != null and !P_CATEGORY_CODE.isEmpty()" >
+        AND    CATEGORY_CODE = #{P_CATEGORY_CODE}
+        </if>
+        <if test="P_SIZE != null and !P_SIZE.isEmpty()" >
+        AND    SIZE_CODE = #{P_SIZE}
+        </if>
+    </delete>
+
+    <update id="deleteProduct" parameterType="hashmap" >
+        UPDATE PRODUCT
+        SET    IS_DELETE = 1
+        WHERE  ID = #{P_ID}
+    </update>
 </mapper>

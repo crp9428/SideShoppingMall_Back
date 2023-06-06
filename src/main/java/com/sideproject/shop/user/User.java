@@ -1,6 +1,6 @@
 package com.sideproject.shop.user;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,8 @@ import lombok.ToString;
 public class User {
     private String id;
     private int isAdmin;
-    private LocalDateTime joinDate;
+    private int isWithdraw;
+    private Timestamp joinDate;
     private String loginId;
     private String password;
     private String name;

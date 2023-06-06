@@ -2,26 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sideproject.shop.mappers.UserMapper">
 
-    <select id="login" parameterType="hashmap" resultType="com.sideproject.shop.user.User">
+    <select id="getUser" parameterType="hashmap" resultType="com.sideproject.shop.user.User">
         SELECT U.ID
-               , U.IS_ADMIN
+               , U.IS_WITHDRAW
                , UID.LOGIN_ID
+        <if test="P_PASSWORD != null and !P_PASSWORD.isEmpty()" >
+               , U.IS_ADMIN
                , INFO.NAME
+        </if>
         FROM   USER U
         INNER JOIN USER_ID UID
         ON     UID.LOGIN_ID = #{P_LOGIN_ID}
-        AND    UID.PASSWORD = #{P_PASSWORD}
         AND    U.ID = UID.ID
+        <if test="P_PASSWORD != null and !P_PASSWORD.isEmpty()" >
+        AND    UID.PASSWORD = #{P_PASSWORD}
         INNER JOIN USER_INFO INFO
         ON     INFO.ID = U.ID
+        </if>
         WHERE  1 = 1
-    </select>
-
-    <select id="checkid" parameterType="hashmap" resultType="int">
-        SELECT COUNT(*)
-        FROM   USER_ID
-        WHERE  1 = 1
-        AND    LOGIN_ID = #{P_LOGIN_ID}
     </select>
 
     <insert id="insert_user" parameterType="hashmap">
@@ -68,4 +66,9 @@
         )
     </insert>
 
+    <update id="withdraw" parameterType="hashmap">
+        UPDATE USER
+        SET    IS_WITHDRAW = 1
+        WHERE  ID = #{P_ID}
+    </update>
 </mapper>

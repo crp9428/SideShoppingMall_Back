@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sideproject.shop.product.Product;
+import com.sideproject.shop.product.ProductImage;
 
 @Mapper
 public interface ProductMapper {
@@ -17,7 +18,7 @@ public interface ProductMapper {
 
     Product getProduct(Map<String, Object> parameters);
 
-    List<String> productImageList(Map<String, Object> parameters);
+    List<ProductImage> productImageList(Map<String, Object> parameters);
 
     List<String> productSizeList(Map<String, Object> parameters);
 
@@ -26,4 +27,12 @@ public interface ProductMapper {
     int insertProductImage(Map<String, Object> parameters);
 
     int insertProductSize(Map<String, Object> parameters);
+
+    int updateProduct(Map<String, Object> parameters);
+
+    int deleteProductImage(Map<String, Object> parameters);
+
+    int deleteProductSize(Map<String, Object> parameters);
+
+    int deleteProduct(Map<String, Object> parameters);
 }
