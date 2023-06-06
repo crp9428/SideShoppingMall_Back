@@ -1,6 +1,7 @@
 package com.sideproject.shop.product;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -126,20 +127,20 @@ public class ProductController {
             service.updateProduct(parameters);
 
             List<ProductImage> images = (product.getImages() == null || product.getImages().size() == 0) ? new ArrayList<ProductImage>() : product.getImages();
-            for(ProductImage image : images) {
-                if(image.getImage() == null) {
-                    parameters.put("P_IMAGE", null);
-                    parameters.put("P_SEQ", image.getSeq());
+            for(ProductImage image : images.stream().filter(e -> e.getImage() != null).collect(Collectors.toList())) {
+                parameters.put("P_IMAGE", image.getImage());
+                parameters.put("P_SEQ", null);
 
-                    service.deleteProductImage(parameters);
-                } else {
-                    parameters.put("P_IMAGE", image.getImage());
-                    parameters.put("P_SEQ", null);
-
-                    service.insertProductImage(parameters);
-                }
+                service.insertProductImage(parameters);
             }
+            
+            for(ProductImage image : images.stream().filter(e -> e.getImage() == null).collect(Collectors.toList())) {
+                parameters.put("P_IMAGE", null);
+                parameters.put("P_SEQ", image.getSeq());
 
+                service.deleteProductImage(parameters);
+            }
+            
             parameters.put("P_PRODUCT_ID", product.getId());
             parameters.put("P_CATEGORY_CODE", product.getCategoryCode());
             parameters.put("P_GET_NAME", false);
