@@ -1,20 +1,23 @@
 server:
     address: 0.0.0.0
+    # LIVE
     port: 8080
+    # TEST
+    # port: 8081
 
 spring:
     datasource:
         driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-        # 로컬
+        # LIVE
         jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true&serverTimeZone=UTC
-        # 외부
+        # TEST
         # jdbc-url: jdbc:log4jdbc:mysql://119.193.0.189:3306/shop?createDatabaseIfNotExist=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true&serverTimeZone=UTC
         username: shopadmin
         password: 940208
         hikari:
             connection-timeout: 10000
             validation-timeout: 8000
-            maximum-pool-size: 10
+            maximum-pool-size: 30
             max-lifetime: 10000
             leakDetectionThreshold: 2000
 

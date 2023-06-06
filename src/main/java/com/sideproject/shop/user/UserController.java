@@ -127,39 +127,71 @@ public class UserController {
             parameters.put("P_ADDRESS2", user.getAddress2());
             parameters.put("P_ADDRESS3", user.getAddress3());
 
-            System.out.println(parameters.toString());
-
-            int sqlResult = 0;
-
-            sqlResult = service.insert_user(parameters);
-            if(sqlResult != 1) {
-                result.put("result", false);
-                result.put("message", "회원가입에 실패하였습니다.");
-
-                return result;
-            }
-
-            sqlResult = service.insert_userId(parameters);
-            if(sqlResult != 1) {
-                result.put("result", false);
-                result.put("message", "회원가입에 실패하였습니다.");
-
-                return result;
-            }
-
-            sqlResult = service.insert_userInfo(parameters);
-            if(sqlResult != 1) {
-                result.put("result", false);
-                result.put("message", "회원가입에 실패하였습니다.");
-
-                return result;
-            }
+            service.insert_user(parameters);
+            
+            service.insert_userId(parameters);
+            
+            service.insert_userInfo(parameters);
 
         } catch (Exception e) {
             result.put("result", false);
             result.put("message", e.getMessage());
 
             throw e;
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/getUserInfo")
+    public Map<String, Object> getUserInfo (@RequestParam String id) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", id);
+
+            User user = service.getUserInfo(parameters);
+            result.put("userInfo", user);
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/updateUserInfo")
+    public Map<String, Object> updateUserInfo (@RequestBody User user) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", user.getId());
+
+            if(user.getPassword() != null && !user.getPassword().isEmpty()) {
+                byte[] getByte = user.getPassword().getBytes("UTF-8");
+                parameters.put("P_PASSWORD", HexUtils.toHexString(getByte));
+
+                service.updatePassword(parameters);
+            }
+            
+            parameters.put("P_EMAIL", user.getEmail());
+            parameters.put("P_PHONE", user.getPhone());
+            parameters.put("P_ADDRESS1", user.getAddress1());
+            parameters.put("P_ADDRESS2", user.getAddress2());
+            parameters.put("P_ADDRESS3", user.getAddress3());
+
+            service.updateUserInfo(parameters);
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
         }
 
         return result;
