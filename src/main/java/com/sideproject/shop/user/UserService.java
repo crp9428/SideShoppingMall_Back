@@ -43,4 +43,8 @@ public class UserService {
     public int withdraw(Map<String, Object> parameters) {
         return mapper.withdraw(parameters);
     }
+
+    public String findLoginId(Map<String, Object> parameters) {
+        return mapper.findLoginId(parameters);
+    }
 }
