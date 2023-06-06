@@ -18,11 +18,13 @@ public interface UserMapper {
 
     int insert_userInfo(Map<String, Object> parameters);
 
-    int updatePassword(Map<String, Object> parameters);
-
     int updateUserInfo(Map<String, Object> parameters);
 
     int withdraw(Map<String, Object> parameters);
 
-    String findLoginId(Map<String, Object> parameters);
+    String findLoginInfo(Map<String, Object> parameters);
+
+    int checkPassword(Map<String, Object> parameters);
+    
+    int updatePassword(Map<String, Object> parameters);
 }

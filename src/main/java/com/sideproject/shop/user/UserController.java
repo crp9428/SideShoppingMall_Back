@@ -174,14 +174,6 @@ public class UserController {
         try {
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("P_ID", user.getId());
-
-            if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-                byte[] getByte = user.getPassword().getBytes("UTF-8");
-                parameters.put("P_PASSWORD", HexUtils.toHexString(getByte));
-
-                service.updatePassword(parameters);
-            }
-            
             parameters.put("P_EMAIL", user.getEmail());
             parameters.put("P_PHONE", user.getPhone());
             parameters.put("P_ADDRESS1", user.getAddress1());
@@ -229,16 +221,20 @@ public class UserController {
 
         try {
             Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_FIND", 1);
             parameters.put("P_NAME", name);
             parameters.put("P_FINDTYPE", findType);
             parameters.put("P_FINDDATA", findData);
 
-            String loginId = service.findLoginId(parameters);
+            String loginId = service.findLoginInfo(parameters);
 
             if(loginId == null || loginId.isEmpty()) {
                 result.put("result", false);
                 result.put("message", "해당되는 회원이 없습니다.");
             } else if (loginId.equals("1")) {
+                result.put("result", false);
+                result.put("message", "탈퇴한 회원입니다.");
+            } else if (loginId.equals("2")) {
                 result.put("result", false);
                 result.put("message", "소셜 가입 회원입니다.");
             } else {
@@ -250,5 +246,89 @@ public class UserController {
         }
 
         return result;
+    }
+
+    @GetMapping("findLoginPassword")
+    public Map<String, Object> findLoginPassword(@RequestParam String loginId, @RequestParam int findType, @RequestParam String findData) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_FIND", 2);
+            parameters.put("P_LOGIN_ID", loginId);
+            parameters.put("P_FINDTYPE", findType);
+            parameters.put("P_FINDDATA", findData);
+
+            String id = service.findLoginInfo(parameters);
+            if(id == null || id.isEmpty()) {
+                result.put("result", false);
+                result.put("message", "해당되는 회원이 없습니다.");
+            } else if (loginId.equals("1")) {
+                result.put("result", false);
+                result.put("message", "탈퇴한 회원입니다.");
+            } else {
+                parameters.put("P_ID", id);
+
+                String tempPassword = getTempPassword();
+                boolean successSend = sendPassword(tempPassword);
+
+                if(successSend) {
+                    byte[] getByte = tempPassword.getBytes("UTF-8");
+                    parameters.put("P_PASSWORD", HexUtils.toHexString(getByte));
+
+                    service.updatePassword(parameters);
+                } else {
+                    result.put("result", false);
+                    result.put("message", "초기 비밀번호 전송 실패");
+                }
+            }
+
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/updatePassword")
+    public Map<String, Object> updatePassword (@RequestParam String id, @RequestParam String passwordNow, @RequestParam String passwordNew) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_ID", id);
+            parameters.put("P_PASSWORD", HexUtils.toHexString(passwordNow.getBytes("UTF-8")));
+            
+            int checkPassword = service.checkPassword(parameters);
+            if(checkPassword == 1) {
+                parameters.put("P_PASSWORD", HexUtils.toHexString(passwordNew.getBytes("UTF-8")));
+
+                service.updatePassword(parameters);
+            } else {
+                result.put("result", false);
+                result.put("message", "비밀번호가 틀렸습니다.");
+            }
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
+
+    public boolean sendPassword(String password) {
+        // 실제로는 임시값 생성해서 이메일/핸드폰번호로 보내줘야 하지만 나중에 작업할 예정
+        return true;
+    }
+
+    public String getTempPassword() {
+        // 실제로는 임시값 생성해서 이메일/핸드폰번호로 보내줘야 하지만 나중에 작업할 예정
+        return "1111";
     }
 }
