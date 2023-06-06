@@ -1,5 +1,6 @@
 package com.sideproject.shop.mappers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -10,7 +11,7 @@ import com.sideproject.shop.user.User;
 public interface UserMapper {
     User getUser(Map<String, Object> parameters);
 
-    User getUserInfo(Map<String, Object> parameters);
+    List<User> getUserInfo(Map<String, Object> parameters);
 
     int insert_user(Map<String, Object> parameters);
 

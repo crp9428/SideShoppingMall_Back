@@ -34,6 +34,7 @@
                , INFO.ADDRESS1
                , INFO.ADDRESS2
                , INFO.ADDRESS3
+               , U.IS_WITHDRAW
                , U.JOIN_DATE
         FROM   USER U
         INNER JOIN USER_ID UID
@@ -41,7 +42,9 @@
         INNER JOIN USER_INFO INFO
         ON     INFO.ID = U.ID
         WHERE  1 = 1
+        <if test="P_ID != null and !P_ID.isEmpty()" >
         AND    U.ID = #{P_ID}
+        </if>
     </select>
 
     <insert id="insert_user" parameterType="hashmap">

@@ -1,6 +1,7 @@
 package com.sideproject.shop.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -154,8 +155,28 @@ public class UserController {
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("P_ID", id);
 
-            User user = service.getUserInfo(parameters);
+            User user = service.getUserInfo(parameters).get(0);
             result.put("userInfo", user);
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/getUserList")
+    public Map<String, Object> getUserList () throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+
+            List<User> userList = service.getUserInfo(parameters);
+            result.put("userList", userList);
         } catch (Exception e) {
             result.put("result", false);
             result.put("message", e.getMessage());
