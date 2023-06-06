@@ -1,5 +1,6 @@
 package com.sideproject.shop.user;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class UserService {
         return mapper.getUser(parameters);
     }
 
-    public User getUserInfo(Map<String, Object> parameters) {
+    public List<User> getUserInfo(Map<String, Object> parameters) {
         return mapper.getUserInfo(parameters);
     }
 
@@ -32,10 +33,6 @@ public class UserService {
         return mapper.insert_userInfo(parameters);
     }
 
-    public int updatePassword(Map<String, Object> parameters) {
-        return mapper.updatePassword(parameters);
-    }
-
     public int updateUserInfo(Map<String, Object> parameters) {
         return mapper.updateUserInfo(parameters);
     }
@@ -44,7 +41,16 @@ public class UserService {
         return mapper.withdraw(parameters);
     }
 
-    public String findLoginId(Map<String, Object> parameters) {
-        return mapper.findLoginId(parameters);
+    public String findLoginInfo(Map<String, Object> parameters) {
+        return mapper.findLoginInfo(parameters);
     }
+
+    public int checkPassword(Map<String, Object> parameters) {
+        return mapper.checkPassword(parameters);
+    }
+    
+    public int updatePassword(Map<String, Object> parameters) {
+        return mapper.updatePassword(parameters);
+    }
+
 }

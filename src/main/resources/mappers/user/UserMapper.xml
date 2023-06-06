@@ -34,6 +34,7 @@
                , INFO.ADDRESS1
                , INFO.ADDRESS2
                , INFO.ADDRESS3
+               , U.IS_WITHDRAW
                , U.JOIN_DATE
         FROM   USER U
         INNER JOIN USER_ID UID
@@ -41,7 +42,9 @@
         INNER JOIN USER_INFO INFO
         ON     INFO.ID = U.ID
         WHERE  1 = 1
+        <if test="P_ID != null and !P_ID.isEmpty()" >
         AND    U.ID = #{P_ID}
+        </if>
     </select>
 
     <insert id="insert_user" parameterType="hashmap">
@@ -88,12 +91,6 @@
         )
     </insert>
 
-    <update id="updatePassword" parameterType="hashmap">
-        UPDATE USER_ID
-        SET    PASSWORD = #{P_PASSWORD}
-        WHERE  ID = #{P_ID}
-    </update>
-    
     <update id="updateUserInfo" parameterType="hashmap">
         UPDATE USER_INFO
         SET    EMAIL = IFNULL(#{P_EMAIL}, EMAIL)
@@ -110,20 +107,49 @@
         WHERE  ID = #{P_ID}
     </update>
 
-    <select id="findLoginId" parameterType="hashmap" resultType="String">
+    <select id="findLoginInfo" parameterType="hashmap" resultType="String">
         SELECT CASE
+               <if test="P_FIND == 1" >
+               WHEN U.IS_WITHDRAW = '1' THEN '1'
                WHEN UI.LOGIN_ID IS NOT NULL THEN UI.LOGIN_ID
-               WHEN INFO.ID IS NOT NULL THEN '1'
+               WHEN INFO.ID IS NOT NULL THEN '2'
+               </if>
+               <if test="P_FIND == 2" >
+               WHEN U.IS_WITHDRAW = '1' THEN '1'
+               WHEN UI.ID IS NOT NULL THEN UI.ID
+               </if>
                END
         FROM   USER_INFO INFO
         LEFT JOIN USER_ID UI
         ON     UI.ID = INFO.ID
-        WHERE  INFO.NAME = #{P_NAME}
+        LEFT JOIN USER U
+        ON     U.ID = INFO.ID
+        WHERE  1 = 1
+        <if test="P_FIND == 1" >
+        AND    INFO.NAME = #{P_NAME}
+        </if>
         <if test ="P_FINDTYPE == 1">
         AND    INFO.EMAIL = #{P_FINDDATA}
         </if>
         <if test ="P_FINDTYPE == 2">
         AND    INFO.PHONE = #{P_FINDDATA}
         </if>
+        <if test="P_FIND == 2" >
+        AND    UI.LOGIN_ID = #{P_LOGIN_ID}
+        </if>
     </select>
+
+    <select id="checkPassword" parameterType="hashmap" resultType="int">
+        SELECT COUNT(*)
+        FROM   USER_ID
+        WHERE  ID = #{P_ID}
+        AND    PASSWORD = #{P_PASSWORD}
+    </select>
+    
+    <update id="updatePassword" parameterType="hashmap">
+        UPDATE USER_ID
+        SET    PASSWORD = #{P_PASSWORD}
+        WHERE  ID = #{P_ID}
+    </update>
+    
 </mapper>
