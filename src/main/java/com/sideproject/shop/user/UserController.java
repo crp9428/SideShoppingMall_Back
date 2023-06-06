@@ -144,7 +144,7 @@ public class UserController {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/getUserInfo")
+    @GetMapping("/getUserInfo")
     public Map<String, Object> getUserInfo (@RequestParam String id) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("result", true);
@@ -212,6 +212,37 @@ public class UserController {
             if(sqlResult != 1) {
                 result.put("result", false);
                 result.put("message", "탈퇴 처리에 실패하였습니다.");
+            }
+        } catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
+    }
+
+    @GetMapping("/findLoginId")
+    public Map<String, Object> findLoginId(@RequestParam String name, @RequestParam int findType, @RequestParam String findData) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_NAME", name);
+            parameters.put("P_FINDTYPE", findType);
+            parameters.put("P_FINDDATA", findData);
+
+            String loginId = service.findLoginId(parameters);
+
+            if(loginId == null || loginId.isEmpty()) {
+                result.put("result", false);
+                result.put("message", "해당되는 회원이 없습니다.");
+            } else if (loginId.equals("1")) {
+                result.put("result", false);
+                result.put("message", "소셜 가입 회원입니다.");
+            } else {
+                result.put("loginId", loginId);
             }
         } catch (Exception e) {
             result.put("result", false);

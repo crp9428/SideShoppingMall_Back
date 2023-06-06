@@ -109,4 +109,21 @@
         SET    IS_WITHDRAW = 1
         WHERE  ID = #{P_ID}
     </update>
+
+    <select id="findLoginId" parameterType="hashmap" resultType="String">
+        SELECT CASE
+               WHEN UI.LOGIN_ID IS NOT NULL THEN UI.LOGIN_ID
+               WHEN INFO.ID IS NOT NULL THEN '1'
+               END
+        FROM   USER_INFO INFO
+        LEFT JOIN USER_ID UI
+        ON     UI.ID = INFO.ID
+        WHERE  INFO.NAME = #{P_NAME}
+        <if test ="P_FINDTYPE == 1">
+        AND    INFO.EMAIL = #{P_FINDDATA}
+        </if>
+        <if test ="P_FINDTYPE == 2">
+        AND    INFO.PHONE = #{P_FINDDATA}
+        </if>
+    </select>
 </mapper>
