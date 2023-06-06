@@ -10,11 +10,17 @@ import com.sideproject.shop.user.User;
 public interface UserMapper {
     User getUser(Map<String, Object> parameters);
 
+    User getUserInfo(Map<String, Object> parameters);
+
     int insert_user(Map<String, Object> parameters);
 
     int insert_userId(Map<String, Object> parameters);
 
     int insert_userInfo(Map<String, Object> parameters);
+
+    int updatePassword(Map<String, Object> parameters);
+    
+    int updateUserInfo(Map<String, Object> parameters);
 
     int withdraw(Map<String, Object> parameters);
 }
