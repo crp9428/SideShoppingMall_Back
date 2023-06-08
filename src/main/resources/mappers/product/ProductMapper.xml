@@ -5,8 +5,14 @@
     <select id="productCount" parameterType="hashmap" resultType="int">
         SELECT COUNT(ID)
         FROM   PRODUCT
-        WHERE  CATEGORY_CODE = #{P_CATEGORY}
+        WHERE  1 = 1
+        <if test="P_CATEGORY != null and !P_CATEGORY.isEmpty()" >
+        AND    CATEGORY_CODE = #{P_CATEGORY}
+        </if>
         AND    IS_DELETE = 0
+        <if test="P_SEARCH_TEXT != null and !P_SEARCH_TEXT.isEmpty()" >
+        AND    LOWER(NAME) LIKE CONCAT('%', LOWER(#{P_SEARCH_TEXT}), '%')
+        </if>
     </select>
 
     <select id="productList" parameterType="hashmap" resultType="com.sideproject.shop.product.Product">
@@ -28,8 +34,13 @@
         ON     IMAGES.ID = PRODUCT.ID
         AND    IMAGES.SEQ = 1
         WHERE  1 = 1
+        <if test="P_CATEGORY != null and !P_CATEGORY.isEmpty()" >
         AND    CATEGORY_CODE = #{P_CATEGORY}
+        </if>
         AND    IS_DELETE = 0
+        <if test="P_SEARCH_TEXT != null and !P_SEARCH_TEXT.isEmpty()" >
+        AND    LOWER(NAME) LIKE CONCAT('%', LOWER(#{P_SEARCH_TEXT}), '%')
+        </if>
         ORDER BY
         <choose>
             <when test="P_ORDER == 1" >HIT DESC</when>
