@@ -199,4 +199,32 @@ public class ProductController {
 
         return result;
     }
+
+    @GetMapping("/searchProduct")
+    public Map<String, Object> searchProduct(@RequestParam String searchText) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("result", true);
+        result.put("message", "success");
+
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("P_SEARCH_TEXT", searchText);
+
+            parameters.put("P_START", 0);
+            parameters.put("P_VIEW_NUM", 8);
+
+            List<Product> list = service.productList(parameters);
+            int count = service.productCount(parameters);
+            
+            result.put("items", list);
+            result.put("counts", count);
+        }  catch (Exception e) {
+            result.put("result", false);
+            result.put("message", e.getMessage());
+
+            throw e;
+        }
+
+        return result;
+    }
 }
