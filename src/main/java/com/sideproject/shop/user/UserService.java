@@ -53,4 +53,7 @@ public class UserService {
         return mapper.updatePassword(parameters);
     }
 
+    public List<Map<String, Object>> getUserList(Map<String, Object> parameters) {
+        return mapper.getUserList(parameters);
+    }
 }

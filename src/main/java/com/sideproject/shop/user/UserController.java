@@ -175,7 +175,7 @@ public class UserController {
         try {
             Map<String, Object> parameters = new HashMap<String, Object>();
 
-            List<User> userList = service.getUserInfo(parameters);
+            List<Map<String, Object>> userList = service.getUserList(parameters);
             result.put("userList", userList);
         } catch (Exception e) {
             result.put("result", false);
