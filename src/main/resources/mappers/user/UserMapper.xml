@@ -152,4 +152,17 @@
         WHERE  ID = #{P_ID}
     </update>
     
+    <select id="getUserList" parameterType="hashmap" resultType="hashmap">
+        SELECT IFNULL(INFO.NAME, '') AS username
+               , IFNULL(UI.LOGIN_ID, '') AS userID
+               , IFNULL(U.IS_ADMIN, '') AS userType
+               , IFNULL(DATE_FORMAT(U.JOIN_DATE, '%Y-%m-%d %H:%i:%s'), '') AS userJoinDate
+               , 0 AS userAmount
+               , 0 AS userPost
+        FROM   USER U
+        INNER JOIN USER_ID UI
+        ON     UI.ID = U.ID
+        INNER JOIN USER_INFO INFO
+        ON     INFO.ID = U.ID
+    </select>
 </mapper>

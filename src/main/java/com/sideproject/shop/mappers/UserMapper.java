@@ -28,4 +28,6 @@ public interface UserMapper {
     int checkPassword(Map<String, Object> parameters);
     
     int updatePassword(Map<String, Object> parameters);
+
+    List<Map<String, Object>> getUserList(Map<String, Object> parameters);
 }
