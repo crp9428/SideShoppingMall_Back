@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -146,8 +147,10 @@ public class ProductController {
             parameters.put("P_GET_NAME", false);
 
             Collection<String> inputList = product.getSizes();
+            inputList = inputList != null ? inputList : Collections.emptyList();
             Collection<String> dbList = service.productSizeList(parameters);
-
+            dbList = dbList != null ? dbList : Collections.emptyList();
+            
             List<String> addSizeList = new ArrayList<String>(inputList);
             List<String> deleteSizeList = new ArrayList<String>(dbList);
 

@@ -163,7 +163,7 @@
         DELETE
         FROM   PRODUCT_IMAGE
         WHERE  ID = #{P_ID}
-        <if test="P_SEQ != null and !P_SEQ.isEmpty()" >
+        <if test="P_SEQ != null and !P_SEQ.equals('')" >
         AND    SEQ = #{P_SEQ}
         </if>
     </delete>
