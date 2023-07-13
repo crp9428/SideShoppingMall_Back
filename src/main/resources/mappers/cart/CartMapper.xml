@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sideproject.shop.mappers.CartMapper">
+    
+    <select id="getCarts" parameterType="hashmap" resultType="com.sideproject.shop.order.Cart">
+        WITH C AS (
+            SELECT USER_ID
+                , PRODUCT_ID
+                , SIZE_CODE
+                , CNT
+            FROM   CART
+        )
+        SELECT C.USER_ID AS USER_ID
+            , C.PRODUCT_ID AS PRODUCT_ID
+            , P.NAME AS PRODUCT_NAME
+            , C.SIZE_CODE AS SIZE_CODE
+            , CODE.CODE_NAME AS SIZE_NAME
+            , IMAGE.IMAGE AS THUMBNAIL
+            , C.CNT AS CNT
+        FROM   C
+        INNER JOIN PRODUCT P
+        ON     P.ID = C.PRODUCT_ID
+        INNER JOIN COMMON_CODE CODE
+        ON     CODE.CODE_GROUP1 = 'SIZE'
+        AND    CODE.CODE_GROUP2 = P.CATEGORY_CODE
+        AND    CODE.CODE = C.SIZE_CODE
+        INNER JOIN (
+            SELECT PI1.ID
+                , PI1.SEQ
+                , PI1.IMAGE
+            FROM   PRODUCT_IMAGE PI1
+            INNER JOIN (
+                SELECT ID
+                    , MIN(SEQ) AS SEQ
+                FROM   PRODUCT_IMAGE
+                GROUP BY ID
+            ) PI2
+            ON     PI1.ID = PI2.ID
+            AND    PI1.SEQ = PI2.SEQ
+        ) IMAGE
+        ON     IMAGE.ID = C.PRODUCT_ID
+        WHERE  1 = 1
+        AND    C.USER_ID = #{P_USER_ID}
+    </select>
+
+</mapper>
