@@ -15,4 +15,5 @@ public class Cart {
     private String sizeName;
     private String thumbnail;
     private int cnt;
+    private int price;
 }
