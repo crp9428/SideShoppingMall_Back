@@ -17,4 +17,12 @@ public class CartService {
     List<Cart> getCarts(Map<String, Object> parameters) {
         return mapper.getCarts(parameters);
     }
+
+    void upsertCart(Map<String, Object> parameters) {
+        mapper.upsertCart(parameters);
+    }
+
+    void deleteCart(Map<String, Object> parameters) {
+        mapper.deleteCart(parameters);
+    }
 }

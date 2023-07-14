@@ -17,6 +17,7 @@
             , CODE.CODE_NAME AS SIZE_NAME
             , IMAGE.IMAGE AS THUMBNAIL
             , C.CNT AS CNT
+            , P.PRICE AS PRICE
         FROM   C
         INNER JOIN PRODUCT P
         ON     P.ID = C.PRODUCT_ID
@@ -43,4 +44,20 @@
         AND    C.USER_ID = #{P_USER_ID}
     </select>
 
+    <update id="upsertCart" parameterType="hashmap" >
+        INSERT INTO CART VALUES (
+            #{P_USER_ID}
+            , #{P_PRODUCT_ID}
+            , #{P_SIZE}
+            , #{P_COUNT}
+        ) ON DUPLICATE KEY 
+        UPDATE CNT = #{P_COUNT}
+    </update>
+
+    <delete id="deleteCart" parameterType="hashmap" >
+        DELETE FROM CART
+        WHERE  USER_ID = #{P_USER_ID}
+        AND    PRODUCT_ID = #{P_PRODUCT_ID}
+        AND    SIZE_CODE = #{P_SIZE}
+    </delete>
 </mapper>
